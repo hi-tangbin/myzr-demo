@@ -1,16 +1,11 @@
 
-CC		= ${CROSS_COMPILE}gcc
-STRIP   = ${CROSS_COMPILE}strip
-RM      = rm
+# 获取当前目录下的 c 文件集，放在变量 SRC_LIST 中
+SRC_LIST	= ${wildcard *.c}
 
-CUR_SOURCE	= ${wildcard *.c}
-CUR_OBJS	= ${patsubst %.c, %.out, $(CUR_SOURCE)}
+# 将对应的 c 文件名转为 out 文件后放在下面的 OBJ_LIST 变量中
+OBJ_LIST	= ${patsubst %.c, %.out, $(SRC_LIST)}
 
-all: $(CUR_OBJS)
-	$(STRIP) $(CUR_OBJS)
+all: $(OBJ_LIST)
 
-$(CUR_OBJS):%.out:%.c
-	$(CC) $^ -o $@
-
-clean:
-	$(RM) *.out
+$(OBJ_LIST):%.out:%.c
+	$(CC) $(CFLAGS) -c $^ -o $(BIN_DIR)/$@

@@ -1,9 +1,5 @@
 
-CMakeFiles
-cmake_install.cmake
-install_manifest.txt
-CMakeCache.txt
-Makefile
 *.so
+*.o
 usr
 include
