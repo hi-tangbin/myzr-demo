@@ -1,0 +1,82 @@
+# ./QDloader -f ~/ec200t.bin 
+[000:000] Version: Quectel_QDloder_Linux&Android_V0.0.4
+[000:000] scan quectel modem
+/sys/bus/usb/devices/1-4 2c7c/6026/318
+open(/dev/bus/usb/001/017) = 4
+[000:001] AT > AT+CFUN=1,1
+[000:003] AT < Quectel
+[000:003] AT < EC200T
+[000:003] AT < Revision: EC200TCNAAR02A04M1G
+[000:003] AT < OK
+[000:004] AT < OK
+[001:010] AT > AT+CFUN=1,1
+[001:012] AT < OK
+[002:034] AT > AT+CFUN=1,1
+[002:035] AT < OK
+[002:578] AT < +CPIN: NOT INSERTED
+bluk in = -1, errno: 71 (Protocol error)
+[004:595] scan quectel modem
+/sys/bus/usb/devices/1-4 1286/812a/0
+open(/dev/bus/usb/001/018) = 4
+[004:631] DKB_ntimheader.bin       Head={00000000, 00000000}, Mid={00000000, 00000000}, Tail={00000000, 00000de0}
+[004:631] Dkb.bin                  Head={00001000, 00000000}, Mid={00000000, 00000000}, Tail={00000000, 0001c284}
+[004:631] FBF_Ntimheader.bin       Head={00ac9288, 00000000}, Mid={00000000, 00000000}, Tail={00000000, 00aca068}
+[004:631] FBF_h.bin                Head={0001c284, 0001d288}, Mid={0001d288, 00ac8288}, Tail={00ac8288, 00ac9288}
+[004:631] Parse DKB Tim image.
+[004:631] dwTimId: 54494d48
+[004:631] Number of Images listed in TIM: 2
+[004:631] 	{Version = 30400, Identifier = 54494d48, Trusted = 0, IssueDate = 20091029, OEMUniqueID = 21796b53}
+[004:631] 	{ImageID = 54494d48, NextImageID = 444b4249, FlashEntryAddr = 0, LoadAddr = d1000000, ImageSize = de0}
+[004:631] 	{ImageID = 444b4249, NextImageID = ffffffff, FlashEntryAddr = 20000, LoadAddr = 7bb0000, ImageSize = 1b280}
+[004:631] dwImageId: 444b4249
+[004:631] Parse FBF Tim image.
+[004:632] dwTimId: 54494d48
+[004:632] Number of Images listed in TIM: 2
+[004:632] 	{Version = 30400, Identifier = 54494d48, Trusted = 0, IssueDate = 20091029, OEMUniqueID = 21796b53}
+[004:632] 	{ImageID = 54494d48, NextImageID = 46424644, FlashEntryAddr = ffffffff, LoadAddr = d1000000, ImageSize = de0}
+[004:632] 	{ImageID = 46424644, NextImageID = ffffffff, FlashEntryAddr = 0, LoadAddr = ffffffff, ImageSize = aad000}
+[004:632] dwImageId: 46424644
+[004:632] WtpCmd: SendPreamble
+[004:633] WtpCmd: GetVersion
+[004:634] 	Version: 3311
+[004:634] 	Date: 06012014
+[004:634] 	Processor: NZA3
+[004:634] WtpCmd: SelectImage
+[004:635] 	ImageType: 54494d48
+[004:635] WtpCmd: VerifyImage ack=0
+[004:636] WtpCmd: DataHeader uiRemainingData=3552
+[004:637] 	Flags: 4, BufferSize is 0xDE0
+[004:637] WtpCmd: Data Length=3552, isLastData=1
+[004:638] WtpCmd: Done
+[004:639] WtpCmd: SendPreamble
+[004:641] WtpCmd: GetVersion
+[004:642] 	Version: 3311
+[004:642] 	Date: 06012014
+[004:642] 	Processor: NZA3
+[004:642] WtpCmd: SelectImage
+[004:643] 	ImageType: 46424644
+[004:643] WtpCmd: VerifyImage ack=0
+[004:644] WtpCmd: DataHeader uiRemainingData=11194368
+[004:645] 	Flags: 4, BufferSize is 0x4000
+[005:467] WtpCmd: Data Length=4096, isLastData=1
+[005:468] WtpCmd: Done
+[005:470] Notification: Platform is busy 0x1
+[005:971] Burnt_Size: 2048 bytes
+[007:976] message pending
+[007:976] Burnt_Size: 4878600 bytes
+[007:977] message pending
+[007:977] Burnt_Size: 4880648 bytes
+[007:978] message pending
+[007:978] Burnt_Size: 4882696 bytes
+[007:979] Burnt_Size: 5530660 bytes
+[008:480] Burnt_Size: 6178624 bytes
+[010:486] message pending
+[010:486] Burnt_Size: 11055176 bytes
+[010:487] message pending
+[010:487] Burnt_Size: 11166408 bytes
+[010:488] message pending
+[010:488] Burnt_Size: 11169960 bytes
+[010:489] Notification: Platform is Ready 0x2
+[010:489] WtpCmd: Disconnect
+[010:501] Upgrade module successfully
+

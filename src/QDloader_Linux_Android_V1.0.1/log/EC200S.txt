@@ -1,0 +1,361 @@
+# ./QDloader -f ~/ec200s.bin 
+[000:000] Version: Quectel_QDloder_Linux&Android_V0.0.4
+[000:000] scan quectel modem
+/sys/bus/usb/devices/1-4 2c7c/6002/318
+open(/dev/bus/usb/001/013) = 4
+[000:002] AT > AT+QDownLOAD=1
+[000:002] AT < +CPIN: NOT INSERTED
+[000:004] AT < ATI
+[000:004] AT < Quectel
+[000:004] AT < EC200S
+[000:004] AT < Revision: EC200SCNABR03A01M16_BETA0402
+[000:004] AT < OK
+[000:004] AT < AT+QDownLOAD=1
+[000:004] AT < OK
+bluk in = -1, errno: 71 (Protocol error)
+[001:306] scan quectel modem
+/sys/bus/usb/devices/1-4 2ecc/3004/0
+open(/dev/bus/usb/001/014) = 4
+[003:725] aboot_device_type is 1
+[003:728] mtu is 1024
+[003:863] Found a crane firmware with size 7669037
+[003:863] [cmd] > getvar:product
+[003:863] [cmd] < OKAYarom-tiny
+[003:863] [cmd] > getvar:version
+[003:864] [cmd] < OKAY0.5
+[003:864] [cmd] > getvar:version-bootrom
+[003:865] [cmd] < OKAY2019.01.15
+[003:865] [cmd] > progress:00eb7bf0
+[003:866] [cmd] < OKAY
+[003:866] [cmd] > getvar:max-download-size
+[003:867] [cmd] < OKAY	0x1c0000
+[003:867] [cmd] > download:00003b00
+[003:868] [cmd] < DATA00003b00
+[003:912] [cmd] < OKAY
+[003:912] [cmd] > verify
+[004:048] [cmd] < OKAY
+[004:048] [cmd] > nop
+[004:049] [cmd] < OKAY
+[004:049] [cmd] > getvar:max-download-size
+[004:050] [cmd] < OKAY	0x1c0000
+[004:050] [cmd] > download:0000b02c
+[004:052] [cmd] < DATA0000b02c
+[004:185] [cmd] < OKAY
+[004:185] [cmd] > verify
+[004:348] [cmd] < OKAY
+[004:348] [cmd] > nop
+[004:348] [cmd] < OKAY
+[004:348] [cmd] > getvar:max-download-size
+[004:350] [cmd] < OKAY	0x1c0000
+[004:350] [cmd] > download:000003f0
+[004:351] [cmd] < DATA000003f0
+[004:352] [cmd] < OKAY
+[004:352] [cmd] > partition
+[004:354] [INFO: QspiNor   ] qspi_nor_flash_probe A1
+[004:354] [INFO: QspiNor   ] QSPI clock configured at 52MHz
+[004:354] [INFO: QspiNor   ] combined_flash_size_in_mb = 0MB
+[004:354] [INFO: QspiNor   ] Manufacturer ID: 0x20, Device ID: 0x5018.
+[004:354] [INFO: QspiNor   ] QSPI clock configured at 104MHz
+[004:354] [INFO: QspiNor   ] Found a known spi flash device "XM25QU128B".
+[004:354] [PRI : QspiNor   ] update SMPR bit5=1, use falling edge.
+[004:354] [INFO: QspiNor   ] flash_cancel_block_protected_xm: status = 0x40.
+[004:354] [cmd] < INFOparse flash information table successfully.
+[004:355] [cmd] < OKAY
+[004:355] [cmd] > getvar:max-download-size
+[004:356] [cmd] < OKAY	0x1c0000
+[004:356] [cmd] > download:0000088c
+[004:356] [cmd] < DATA0000088c
+[004:364] [cmd] < OKAY
+[004:364] [cmd] > partition
+[004:365] [cmd] < INFOparse partition table successfully.
+[004:365] [INFO: Aboot     ] published 22 partition information table.
+[004:365] [cmd] < OKAY
+[004:365] [cmd] > getvar:max-download-size
+[004:366] [cmd] < OKAY	0x1c0000
+[004:367] [cmd] > getvar:partition-type:bootloader
+[004:368] [cmd] < OKAYubi
+[004:368] [cmd] > erase:bootloader
+[004:370] [cmd] < INFOerasing 'bootloader' scheduled in background
+[004:370] [cmd] < OKAY
+[004:370] [cmd] < INFOerasing partition 'bootloader'
+[004:370] [cmd] > getvar:max-download-size
+[004:371] [cmd] < OKAY	0x1c0000
+[004:371] [cmd] > download:0001f044
+[004:372] [cmd] < DATA0001f044
+[004:745] [cmd] < OKAY
+[004:745] [cmd] > flash:bootloader
+[004:746] [cmd] < INFOwriting 'bootloader' scheduled in background
+[004:746] [cmd] < OKAY
+[004:746] [cmd] > getvar:max-download-size
+[004:747] [cmd] < OKAY	0x1c0000
+[004:747] [cmd] > download:00001044
+[004:748] [cmd] < DATA00001044
+[004:761] [cmd] < OKAY
+[004:761] [cmd] > flash:ptable
+[004:762] [cmd] < INFOwriting 'ptable' scheduled in background
+[004:762] [cmd] < OKAY
+[004:762] [cmd] > getvar:max-download-size
+[004:763] [cmd] < OKAY	0x1c0000
+[004:763] [cmd] > download:00001044
+[004:764] [cmd] < DATA00001044
+[004:777] [cmd] < OKAY
+[004:777] [cmd] > flash:fwcerts
+[004:778] [cmd] < INFOwriting 'fwcerts' scheduled in background
+[004:778] [cmd] < OKAY
+[004:778] [cmd] > getvar:max-download-size
+[004:779] [cmd] < OKAY	0x1c0000
+[004:779] [cmd] > download:0000405c
+[004:780] [cmd] < DATA0000405c
+[004:829] [cmd] < OKAY
+[004:829] [cmd] > flash:rd
+[004:830] [cmd] < INFOwriting 'rd' scheduled in background
+[004:830] [cmd] < OKAY
+[004:830] [cmd] > getvar:max-download-size
+[004:830] [cmd] < OKAY	0x1c0000
+[004:831] [cmd] > download:000ff054
+[006:484] [cmd] < INFOerase "bootloader" done. 
+[006:484] [cmd] < INFOprogramming partition 'bootloader' with datap = #0x7e000000, size = 0x1f044
+[006:494] [cmd] < PROG1
+[006:649] [cmd] < INFOprogram "bootloader" done.
+[006:649] [cmd] < INFOprogramming partition 'ptable' with datap = #0x7e1c0000, size = 0x1044
+[006:649] [cmd] < DATA000ff054
+[006:718] [cmd] < INFOprogram "ptable" done.
+[006:718] [cmd] < INFOprogramming partition 'fwcerts' with datap = #0x7e380000, size = 0x1044
+[006:801] [cmd] < INFOprogram "fwcerts" done.
+[006:801] [cmd] < INFOprogramming partition 'rd' with datap = #0x7e540000, size = 0x405c
+[006:994] [cmd] < PROG2
+[007:155] [cmd] < INFOprogram "rd" done.
+[009:710] [cmd] < OKAY
+[009:710] [cmd] > flash:cp
+[009:711] [cmd] < INFOwriting 'cp' scheduled in background
+[009:711] [cmd] < OKAY
+[009:711] [cmd] < INFOprogramming partition 'cp' with datap = #0x7e000000, size = 0xff054
+[009:711] [cmd] > getvar:max-download-size
+[009:711] [cmd] < OKAY	0x1c0000
+[009:712] [cmd] > download:000ff064
+[009:712] [cmd] < DATA000ff064
+[009:835] [cmd] < PROG3
+[010:096] [cmd] < PROG4
+[010:354] [cmd] < PROG5
+[010:744] [cmd] < PROG6
+[011:017] [cmd] < PROG7
+[011:290] [cmd] < PROG8
+[011:659] [cmd] < PROG9
+[011:917] [cmd] < PROG10
+[012:186] [cmd] < PROG11
+[012:566] [cmd] < PROG12
+[012:774] [cmd] < OKAY
+[012:774] [cmd] > flash:cp
+[012:774] [cmd] < INFOwriting 'cp' scheduled in background
+[012:775] [cmd] < OKAY
+[012:775] [cmd] > getvar:max-download-size
+[012:776] [cmd] < OKAY	0x1c0000
+[012:776] [cmd] > download:000ff064
+[012:776] [cmd] < DATA000ff064
+[012:832] [cmd] < PROG13
+[013:106] [cmd] < PROG14
+[013:495] [cmd] < PROG15
+[013:769] [cmd] < PROG16
+[014:017] [cmd] < PROG17
+[014:395] [cmd] < PROG18
+[014:655] [cmd] < PROG19
+[015:062] [cmd] < PROG20
+[015:329] [cmd] < PROG21
+[015:584] [cmd] < PROG22
+[015:838] [cmd] < OKAY
+[015:838] [cmd] > flash:cp
+[015:839] [cmd] < INFOwriting 'cp' scheduled in background
+[015:839] [cmd] < OKAY
+[015:839] [cmd] > getvar:max-download-size
+[015:839] [cmd] < OKAY	0x1c0000
+[015:840] [cmd] > download:000ff064
+[015:840] [cmd] < DATA000ff064
+[015:970] [cmd] < PROG23
+[016:243] [cmd] < PROG24
+[016:507] [cmd] < PROG25
+[016:890] [cmd] < PROG26
+[017:159] [cmd] < PROG27
+[017:419] [cmd] < PROG28
+[017:807] [cmd] < PROG29
+[018:065] [cmd] < PROG30
+[018:307] [cmd] < PROG31
+[018:694] [cmd] < PROG32
+[018:902] [cmd] < OKAY
+[018:902] [cmd] > flash:cp
+[018:903] [cmd] < INFOwriting 'cp' scheduled in background
+[018:903] [cmd] < OKAY
+[018:903] [cmd] > getvar:max-download-size
+[018:903] [cmd] < OKAY	0x1c0000
+[018:903] [cmd] > download:000ff064
+[018:968] [cmd] < PROG33
+[019:380] [cmd] < PROG34
+[019:648] [cmd] < PROG35
+[019:902] [cmd] < PROG36
+[020:280] [cmd] < PROG37
+[020:552] [cmd] < PROG38
+[020:821] [cmd] < PROG39
+[021:198] [cmd] < PROG40
+[021:463] [cmd] < PROG41
+[021:726] [cmd] < PROG42
+[022:249] [cmd] < PROG43
+[022:563] [cmd] < PROG44
+[022:759] [cmd] < PROG45
+[022:953] [cmd] < PROG46
+[023:142] [cmd] < PROG47
+[023:335] [cmd] < PROG48
+[023:531] [cmd] < PROG49
+[023:778] [cmd] < INFOprogram "cp" done.
+[023:778] [cmd] < INFOprogramming partition 'cp' with datap = #0x7e1c0000, size = 0xff064
+[023:778] [cmd] < DATA000ff064
+[023:809] [cmd] < PROG50
+[024:005] [cmd] < PROG51
+[024:200] [cmd] < PROG52
+[024:390] [cmd] < PROG53
+[024:586] [cmd] < PROG54
+[024:781] [cmd] < PROG55
+[024:972] [cmd] < PROG56
+[025:184] [cmd] < INFOprogram "cp" done.
+[025:184] [cmd] < INFOprogramming partition 'cp' with datap = #0x7e380000, size = 0xff064
+[025:261] [cmd] < PROG57
+[025:457] [cmd] < PROG58
+[025:648] [cmd] < PROG59
+[025:843] [cmd] < PROG60
+[026:039] [cmd] < PROG61
+[026:234] [cmd] < PROG62
+[026:425] [cmd] < PROG63
+[026:591] [cmd] < INFOprogram "cp" done.
+[026:591] [cmd] < INFOprogramming partition 'cp' with datap = #0x7e540000, size = 0xff064
+[026:714] [cmd] < PROG64
+[026:843] [cmd] < OKAY
+[026:843] [cmd] > flash:cp
+[026:844] [cmd] < INFOwriting 'cp' scheduled in background
+[026:844] [cmd] < OKAY
+[026:844] [cmd] > getvar:max-download-size
+[026:845] [cmd] < OKAY	0x1c0000
+[026:845] [cmd] > download:000eb054
+[026:845] [cmd] < DATA000eb054
+[026:910] [cmd] < PROG65
+[027:100] [cmd] < PROG66
+[027:296] [cmd] < PROG67
+[027:492] [cmd] < PROG68
+[027:682] [cmd] < PROG69
+[027:877] [cmd] < PROG70
+[027:997] [cmd] < INFOprogram "cp" done.
+[027:997] [cmd] < INFOprogramming partition 'cp' with datap = #0x7e000000, size = 0xff064
+[028:167] [cmd] < PROG71
+[028:357] [cmd] < PROG72
+[028:553] [cmd] < PROG73
+[028:748] [cmd] < PROG74
+[028:939] [cmd] < PROG75
+[029:135] [cmd] < PROG76
+[029:404] [cmd] < INFOprogram "cp" done.
+[029:667] [cmd] < OKAY
+[029:667] [cmd] > flash:cp
+[029:667] [cmd] < INFOwriting 'cp' scheduled in background
+[029:668] [cmd] < OKAY
+[029:668] [cmd] < INFOprogramming partition 'cp' with datap = #0x7e1c0000, size = 0xeb054
+[029:668] [cmd] > getvar:max-download-size
+[029:669] [cmd] < OKAY	0x1c0000
+[029:669] [cmd] > download:000ff054
+[029:669] [cmd] < DATA000ff054
+[029:689] [cmd] < PROG77
+[029:879] [cmd] < PROG78
+[030:074] [cmd] < PROG79
+[030:270] [cmd] < PROG80
+[030:460] [cmd] < PROG81
+[030:656] [cmd] < PROG82
+[030:851] [cmd] < PROG83
+[030:964] [cmd] < INFOprogram "cp" done.
+[032:731] [cmd] < OKAY
+[032:731] [cmd] > flash:dsp
+[032:731] [cmd] < INFOwriting 'dsp' scheduled in background
+[032:732] [cmd] < OKAY
+[032:732] [cmd] < INFOprogramming partition 'dsp' with datap = #0x7e380000, size = 0xff054
+[032:732] [cmd] > getvar:max-download-size
+[032:733] [cmd] < OKAY	0x1c0000
+[032:733] [cmd] > download:0000b054
+[032:733] [cmd] < DATA0000b054
+[032:866] [cmd] < OKAY
+[032:867] [cmd] > flash:dsp
+[032:868] [cmd] < INFOwriting 'dsp' scheduled in background
+[032:868] [cmd] < OKAY
+[032:868] [cmd] > getvar:max-download-size
+[032:869] [cmd] < OKAY	0x1c0000
+[032:869] [cmd] > download:00005044
+[032:869] [cmd] < DATA00005044
+[032:931] [cmd] < OKAY
+[032:931] [cmd] > flash:rfbin
+[032:931] [cmd] < INFOwriting 'rfbin' scheduled in background
+[032:931] [cmd] < OKAY
+[032:932] [cmd] > getvar:max-download-size
+[032:932] [cmd] < OKAY	0x1c0000
+[032:933] [cmd] > download:00006044
+[032:934] [cmd] < DATA00006044
+[033:006] [cmd] < OKAY
+[033:007] [cmd] > flash:logo
+[033:007] [cmd] < INFOwriting 'logo' scheduled in background
+[033:007] [cmd] < OKAY
+[033:008] [cmd] > getvar:max-download-size
+[033:009] [cmd] < OKAY	0x1c0000
+[033:009] [cmd] > download:0001f044
+[033:650] [cmd] < PROG84
+[033:917] [cmd] < PROG85
+[034:303] [cmd] < PROG86
+[034:551] [cmd] < PROG87
+[034:805] [cmd] < PROG88
+[035:206] [cmd] < PROG89
+[035:471] [cmd] < PROG90
+[035:623] [cmd] < PROG91
+[035:818] [cmd] < PROG92
+[036:013] [cmd] < PROG93
+[036:202] [cmd] < PROG94
+[036:396] [cmd] < PROG95
+[036:590] [cmd] < PROG96
+[036:863] [cmd] < INFOprogram "dsp" done.
+[036:863] [cmd] < INFOprogramming partition 'dsp' with datap = #0x7e540000, size = 0xb054
+[036:863] [cmd] < DATA0001f044
+[036:868] [cmd] < PROG97
+[036:923] [cmd] < INFOprogram "dsp" done.
+[036:923] [cmd] < INFOprogramming partition 'rfbin' with datap = #0x7e000000, size = 0x5044
+[037:238] [cmd] < OKAY
+[037:238] [cmd] > flash:updater
+[037:240] [cmd] < INFOwriting 'updater' scheduled in background
+[037:240] [cmd] < OKAY
+[037:240] [cmd] > erase:erase_rd
+[037:241] [cmd] < INFOerasing 'erase_rd' scheduled in background
+[037:241] [cmd] < OKAY
+[037:241] [cmd] > erase:fota_param
+[037:242] [cmd] < INFOerasing 'fota_param' scheduled in background
+[037:242] [cmd] < OKAY
+[037:242] [cmd] > getvar:max-download-size
+[037:243] [cmd] < OKAY	0x1c0000
+[037:244] [cmd] > download:00001044
+[037:244] [cmd] < DATA00001044
+[037:258] [cmd] < OKAY
+[037:258] [cmd] > flash:machine
+[037:260] [cmd] < INFOwriting 'machine' scheduled in background
+[037:260] [cmd] < OKAY
+[037:260] [cmd] > reboot
+[037:261] [cmd] < OKAY
+[037:261] [cmd] > complete
+[037:262] [cmd] < INFOwaiting all flash operations to be completed
+[037:276] [cmd] < INFOprogram "rfbin" done.
+[037:276] [cmd] < INFOprogramming partition 'logo' with datap = #0x7e1c0000, size = 0x6044
+[037:686] [cmd] < INFOprogram "logo" done.
+[037:686] [cmd] < INFOprogramming partition 'updater' with datap = #0x7e380000, size = 0x1f044
+[038:107] [cmd] < PROG98
+[038:920] [cmd] < PROG99
+[039:028] [cmd] < INFOprogram "updater" done.
+[039:028] [cmd] < INFOerasing partition 'erase_rd'
+[039:123] [cmd] < INFOerase "erase_rd" done. 
+[039:123] [cmd] < INFOerasing partition 'fota_param'
+[039:127] [cmd] < PROG100
+[039:128] [cmd] < INFOerase "fota_param" done. 
+[039:128] [cmd] < INFOprogramming partition 'machine' with datap = #0x7e540000, size = 0x1044
+[039:189] [cmd] < INFOprogram "machine" done.
+[039:190] [cmd] < PROG100
+[039:190] [cmd] < OKAY
+[039:190] [INFO: Aboot     ] Waiting for 1 second to reboot...
+bluk in = -1, errno: 9 (Bad file descriptor)
+[040:201] Upgrade module successfully
+

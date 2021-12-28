@@ -1,0 +1,50 @@
+# ./QDloader -f ~/ec200u.pac 
+[000:000] Version: Quectel_QDloder_Linux&Android_V0.0.4
+[000:001] scan quectel modem
+/sys/bus/usb/devices/1-4 2c7c/901/318
+open(/dev/bus/usb/001/008) = 4
+[000:003] AT > AT+QDownLOAD=1
+[000:003] AT < Quectel
+[000:004] AT < EC200U
+[000:004] AT < Revision: EC200UCNAAR02A01M08
+[000:004] AT < OK
+[000:024] AT < OK
+bluk in = -1, errno: 71 (Protocol error)
+[001:122] scan quectel modem
+/sys/bus/usb/devices/1-4 525/a4a7/0
+open(/dev/bus/usb/001/009) = 4
+[001:125] Version: BP_R1.0.0
+[001:125] ProductName: UIX8910_MODEM
+[001:125] ProductVersion: 8910 MODULE
+[001:125] szPrdAlias: 8915DM_cat1
+[001:127] Flash    HOST_FDL
+[002:168] 	> BSL_CMD_CHECK_BAUD
+[002:169] 	< BSL_REP_VER
+[002:169] 	> BSL_CMD_CONNECT
+[002:169] 	> BSL_CMD_CHANGE_BAUD
+[002:169] Flash    FDL2
+[002:169] 	> BSL_CMD_START_DATA
+[002:253] 	> BSL_CMD_END_DATA
+[002:255] 	> BSL_CMD_EXEC_DATA
+[002:258] Backup   NV -> '/tmp/quectel_back_NV'
+[002:923] Flash    NV
+[002:924] 	> BSL_CMD_START_DATA
+[003:079] 	> BSL_CMD_END_DATA
+[003:336] Flash    BOOTLOADER
+[003:336] 	> BSL_CMD_START_DATA
+[003:393] 	> BSL_CMD_END_DATA
+[003:833] Flash    AP
+[003:833] 	> BSL_CMD_START_DATA
+[020:359] 	> BSL_CMD_END_DATA
+[021:012] Flash    PS
+[021:012] 	> BSL_CMD_START_DATA
+[040:323] 	> BSL_CMD_END_DATA
+[040:674] Erase    FLASH
+[040:674] 	> BSL_CMD_ERASE_FLASH
+[040:897] Flash    PREPACK
+[040:897] 	> BSL_CMD_START_DATA
+zlp
+[049:084] 	> BSL_CMD_END_DATA
+[049:086] 	> BSL_CMD_NORMAL_RESET
+[049:097] Upgrade module successfully
+

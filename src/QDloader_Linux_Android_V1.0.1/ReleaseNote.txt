@@ -1,0 +1,63 @@
+Release Notes
+
+[v1.0.1]
+Date:   2021/9/28
+enhancement:
+  1. Added EG912Y-EM upgrade support
+  2. Added EC200A upgrade support
+  3. Added EC200S upgrade support for goke
+  4. Added state network RM500U-CN upgrade support
+fix:
+
+[v0.0.9]
+Date:   2021/8/19
+enhancement:
+  1. Optimized some platform string self-copy bug
+  2. Optimized error caused by the download port switching when opening the device sign
+fix:
+  1. EC200T: increasing platform compatibility
+
+[v0.0.8]
+Date:   2021/6/11
+enhancement:
+  1. 增加对EC200T冀北和能源控制器项目
+  2. Added EC600N-CN module restart function after successful upgrade
+  3. Added support for new EC200U packages (added ERASE_BOOT recognition)
+  4. Added -s to specify at port for the module to be upgraded
+fix:
+  1. rg500U & EC200U: some upgrade fail
+
+[v0.0.7]
+Date:   2021/5/10
+enhancement:
+fix:
+  1. rg500U: IMEI and SN lost, EC200U: IMEI lost
+
+
+[v0.0.6]
+Date:   2021/4/21
+enhancement:
+fix:
+  1. rg500U: fix merge nv error. fix by neil, less copy last 4 bytes
+
+[v0.0.5]
+Date:   2021/4/15
+enhancement:
+fix:
+  1. rg500U: fix merge nv error. fix by neil, when old nv file's size < new nv file's size, we should use new nv file's size
+
+	 
+[v0.0.4]
+Date:   2021/4/6
+enhancement:
+  1. send 'ATI' to show old FW version
+fix:
+  1. ec200s: fail when origin FW do not support firmwar.bin
+  2. ec200t: show successful even when usb disconnect during upgrade process.
+
+[v0.0.3]
+Date:   2021/4/1
+enhancement:
+  1. First Release Version of QDloder Tool.
+     support UDX710(RG500U)/UIS8910DM(EC200U)/ASR1802S(EC200T)/ASR1601(EC200S)
+	 
