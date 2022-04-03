@@ -7,6 +7,8 @@
 #include "process_fifo_msg.h"
 #include "uci_file.h"
 
+profile_t f_profile_5g;
+
 int lte_dial_index=0;
 int fd=0;                            //文件描述符
 int fibocom_module_type=0;//0:FM150  //1:FM650
@@ -485,7 +487,7 @@ lte_dial_enter:
     {
 
 //value:    CONNECT   DISCONECT
-        uci_load_file();
+        //uci_load_file();
         // set_netstatus_info("DISCONNECT");
         memset(netstatus_msg,0,sizeof(netstatus_msg));
         strcpy(netstatus_msg,"DISCONNECT");
