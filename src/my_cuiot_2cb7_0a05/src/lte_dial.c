@@ -122,7 +122,7 @@ int lte_net_dial_init(void)
                     ret = uart_send_cmd(fd,"AT+CFUN=1\r\n",rcv_buf,sizeof(rcv_buf),1000*5);
                     if(strstr(rcv_buf,"OK"))
                     {
-                        
+
                     }
                     else
                     {
@@ -131,11 +131,11 @@ int lte_net_dial_init(void)
                             return NET_DIAL_FAIL;
                         }
                     }
-                    
+
                     sleep(1);
                 }
-                
-            break;
+
+                break;
 
             case LTE_CHECK_SIM:
                 printf("\n[%s] [%s] [%d] \n",__FILE__,__FUNCTION__,__LINE__);
@@ -156,239 +156,239 @@ int lte_net_dial_init(void)
                     }
                 }
                 sleep(2);
-            break;
+                break;
 
             case LTE_CHECK_CSQ:
-            {
-                int rssi=0;
-                int ber=0;
-                int ss_sinr=0;
-                int ss_rsrp=0;
-                int ss_rsrq=0;
-                char str_rssi[10];
-
-                ret = uart_send_cmd(fd,"AT+CSQ?\r\n",rcv_buf,sizeof(rcv_buf),1000*2);
-                sscanf(rcv_buf,"\n+CSQ: %d,%d",&rssi,&ber);
-                memset(str_rssi,0,sizeof(str_rssi));
-
-                sprintf(str_rssi,"%d",rssi);
-                // set_rssi_info(str_rssi);
-                if((rssi==0||rssi==99))
                 {
-                    if(search_cnt>NET_SEARCH_CNT)
+                    int rssi=0;
+                    int ber=0;
+                    int ss_sinr=0;
+                    int ss_rsrp=0;
+                    int ss_rsrq=0;
+                    char str_rssi[10];
+
+                    ret = uart_send_cmd(fd,"AT+CSQ?\r\n",rcv_buf,sizeof(rcv_buf),1000*2);
+                    sscanf(rcv_buf,"\n+CSQ: %d,%d",&rssi,&ber);
+                    memset(str_rssi,0,sizeof(str_rssi));
+
+                    sprintf(str_rssi,"%d",rssi);
+                    // set_rssi_info(str_rssi);
+                    if((rssi==0||rssi==99))
                     {
-                        return NET_NO_SIGNAL;
-                    }
-                }
-                else
-                {
-                    set_dial_sta(LTE_COPS_INFO);
-                }
-
-                //AT+CESQ// +CESQ: 99,99,255,255,26,64,255,255,255
-                memset(rcv_buf,0,sizeof(rcv_buf));
-                ret = uart_send_cmd(fd,"AT+CESQ\r\n",rcv_buf,sizeof(rcv_buf),1000*2);
-                sscanf(rcv_buf,"\n+CESQ: %*[^,],%*[^,],%*[^,],%*[^,],%*[^,],%*[^,],%d,%d,%d,\r\n",&ss_rsrq,&ss_rsrp,&ss_sinr);
-                printf("lte signal rssi [%d] ss_rsrp [%d]",rssi,ss_rsrp);
-                if((ss_rsrp==255)||(ss_rsrp==0))
-                {
-                    if(search_cnt>NET_SEARCH_CNT)
-                    {
-                        return NET_NO_SIGNAL;
-                    }
-                }
-                else
-                {
-                    set_dial_sta(LTE_COPS_INFO);
-                }
-            }
-            break;
-            case LTE_COPS_INFO:
-            {
-                int mode=0;
-                int format=0;
-                char oper_type[30]={0};
-                int act=0;
-                char at_cmd_temp[512]={0};
-                char mgauth_cmd_temp[512]={0};
-                memset(at_cmd_temp,0,sizeof(at_cmd_temp));
-                memset(mgauth_cmd_temp,0,sizeof(mgauth_cmd_temp));
-
-                if((f_profile_5g.enable_5g=="1")&&(f_profile_5g.apn!=NULL))
-                {
-                    if((f_profile_5g.user!=NULL)&&(f_profile_5g.pwd!=NULL))
-                    {
-                        sprintf(mgauth_cmd_temp,"AT+MGAUTH=1,0,\"%s\",\"%s\"\r\n",f_profile_5g.user,f_profile_5g.pwd);
-                        memset(rcv_buf,0,sizeof(rcv_buf));
-                        ret = uart_send_cmd(fd,mgauth_cmd_temp,rcv_buf,sizeof(rcv_buf),1000*2);
-                        if(strstr(rcv_buf,"OK"))
+                        if(search_cnt>NET_SEARCH_CNT)
                         {
-                            printf("lte_dial set user[%s] pwd[%s] success ",f_profile_5g.user,f_profile_5g.pwd);
+                            return NET_NO_SIGNAL;
                         }
                     }
-                    sprintf(at_cmd_temp,"AT+CGDCONT=1,\"IPV4V6\",\"%s\"\r\n",f_profile_5g.apn);
+                    else
+                    {
+                        set_dial_sta(LTE_COPS_INFO);
+                    }
+
+                    //AT+CESQ// +CESQ: 99,99,255,255,26,64,255,255,255
+                    memset(rcv_buf,0,sizeof(rcv_buf));
+                    ret = uart_send_cmd(fd,"AT+CESQ\r\n",rcv_buf,sizeof(rcv_buf),1000*2);
+                    sscanf(rcv_buf,"\n+CESQ: %*[^,],%*[^,],%*[^,],%*[^,],%*[^,],%*[^,],%d,%d,%d,\r\n",&ss_rsrq,&ss_rsrp,&ss_sinr);
+                    printf("lte signal rssi [%d] ss_rsrp [%d]",rssi,ss_rsrp);
+                    if((ss_rsrp==255)||(ss_rsrp==0))
+                    {
+                        if(search_cnt>NET_SEARCH_CNT)
+                        {
+                            return NET_NO_SIGNAL;
+                        }
+                    }
+                    else
+                    {
+                        set_dial_sta(LTE_COPS_INFO);
+                    }
                 }
-                else
+                break;
+            case LTE_COPS_INFO:
                 {
-                    ret = uart_send_cmd(fd,"AT+COPS?\r\n",rcv_buf,sizeof(rcv_buf),1000*2);
-                    memset(oper_type,0,sizeof(oper_type));
-                    sscanf(rcv_buf,"\n+COPS: %d,%d,\"%[^\"]\",%d",&mode,&format,oper_type,&act);
-                    // printf("uart mode[%d]format[%d]oper_type[%s]act[%d]\n",mode,format,oper_type,act);
+                    int mode=0;
+                    int format=0;
+                    char oper_type[30]={0};
+                    int act=0;
+                    char at_cmd_temp[512]={0};
+                    char mgauth_cmd_temp[512]={0};
+                    memset(at_cmd_temp,0,sizeof(at_cmd_temp));
+                    memset(mgauth_cmd_temp,0,sizeof(mgauth_cmd_temp));
+
+                    if((f_profile_5g.enable_5g=="1")&&(f_profile_5g.apn!=NULL))
+                    {
+                        if((f_profile_5g.user!=NULL)&&(f_profile_5g.pwd!=NULL))
+                        {
+                            sprintf(mgauth_cmd_temp,"AT+MGAUTH=1,0,\"%s\",\"%s\"\r\n",f_profile_5g.user,f_profile_5g.pwd);
+                            memset(rcv_buf,0,sizeof(rcv_buf));
+                            ret = uart_send_cmd(fd,mgauth_cmd_temp,rcv_buf,sizeof(rcv_buf),1000*2);
+                            if(strstr(rcv_buf,"OK"))
+                            {
+                                printf("lte_dial set user[%s] pwd[%s] success ",f_profile_5g.user,f_profile_5g.pwd);
+                            }
+                        }
+                        sprintf(at_cmd_temp,"AT+CGDCONT=1,\"IPV4V6\",\"%s\"\r\n",f_profile_5g.apn);
+                    }
+                    else
+                    {
+                        ret = uart_send_cmd(fd,"AT+COPS?\r\n",rcv_buf,sizeof(rcv_buf),1000*2);
+                        memset(oper_type,0,sizeof(oper_type));
+                        sscanf(rcv_buf,"\n+COPS: %d,%d,\"%[^\"]\",%d",&mode,&format,oper_type,&act);
+                        // printf("uart mode[%d]format[%d]oper_type[%s]act[%d]\n",mode,format,oper_type,act);
+
+                        memset(rcv_buf,0,sizeof(rcv_buf));
+                        if(strstr(oper_type,"CHINA MOBILE"))
+                        {
+                            memcpy(at_cmd_temp,CSTT_CHINA_MOBILE,strlen(CSTT_CHINA_MOBILE));
+                        }
+                        else if(strstr(oper_type,"CHN-UNICOM"))
+                        {
+                            memcpy(at_cmd_temp,CSTT_CHINA_UNICOM,strlen(CSTT_CHINA_UNICOM));
+                        }
+                        else if(strstr(oper_type,"CHN-CT"))
+                        {
+                            memcpy(at_cmd_temp,CSTT_CHINA_TELECOM,strlen(CSTT_CHINA_TELECOM));
+                        }
+                    }
 
                     memset(rcv_buf,0,sizeof(rcv_buf));
-                    if(strstr(oper_type,"CHINA MOBILE"))
+                    ret = uart_send_cmd(fd,at_cmd_temp,rcv_buf,sizeof(rcv_buf),1000*2);
+                    if(strstr(rcv_buf,"OK"))
                     {
-                        memcpy(at_cmd_temp,CSTT_CHINA_MOBILE,strlen(CSTT_CHINA_MOBILE));
+                        set_dial_sta(LTE_CHECK_CEREG);
                     }
-                    else if(strstr(oper_type,"CHN-UNICOM"))
+                    else
                     {
-                        memcpy(at_cmd_temp,CSTT_CHINA_UNICOM,strlen(CSTT_CHINA_UNICOM));
-                    }
-                    else if(strstr(oper_type,"CHN-CT"))
-                    {
-                        memcpy(at_cmd_temp,CSTT_CHINA_TELECOM,strlen(CSTT_CHINA_TELECOM));
+                        if(search_cnt>NET_SEARCH_CNT)
+                        {
+                            return NET_NO_REGISTER;
+                        }
+                        break;
                     }
                 }
-                
-                memset(rcv_buf,0,sizeof(rcv_buf));
-                ret = uart_send_cmd(fd,at_cmd_temp,rcv_buf,sizeof(rcv_buf),1000*2);
-                if(strstr(rcv_buf,"OK"))
-                {
-                    set_dial_sta(LTE_CHECK_CEREG);
-                }
-                else
-                {
-                    if(search_cnt>NET_SEARCH_CNT)
-                    {
-                        return NET_NO_REGISTER;
-                    }
-                    break;
-                }
-            }
-            break;
+                break;
 
 
             case LTE_CHECK_CEREG:
-            {
-                int n=0;
-                int state=0;
-                int n_5g=0;
-                int state_5g=0;
-                sleep(2);
+                {
+                    int n=0;
+                    int state=0;
+                    int n_5g=0;
+                    int state_5g=0;
+                    sleep(2);
 
-                ret = uart_send_cmd(fd,"AT+C5GREG?\r\n",rcv_buf,sizeof(rcv_buf),1000*2);
-                sscanf(rcv_buf,"\n+C5GREG: %d,%d",&n_5g,&state_5g);
-                if(state_5g==1||state_5g==5)
-                {
-                    strcpy(nettype_msg,"5G");
-                    set_dial_sta(LTE_CHECK_DIAL);
-                    break;
-                }
-                else
-                {
-                    if(search_cnt>NET_SEARCH_CNT)
+                    ret = uart_send_cmd(fd,"AT+C5GREG?\r\n",rcv_buf,sizeof(rcv_buf),1000*2);
+                    sscanf(rcv_buf,"\n+C5GREG: %d,%d",&n_5g,&state_5g);
+                    if(state_5g==1||state_5g==5)
                     {
-                        return NET_NO_REGISTER;
+                        strcpy(nettype_msg,"5G");
+                        set_dial_sta(LTE_CHECK_DIAL);
+                        break;
+                    }
+                    else
+                    {
+                        if(search_cnt>NET_SEARCH_CNT)
+                        {
+                            return NET_NO_REGISTER;
+                        }
+                    }
+
+                    ret = uart_send_cmd(fd,"AT+CEREG?\r\n",rcv_buf,sizeof(rcv_buf),1000*2);
+                    sscanf(rcv_buf,"\n+CEREG: %d,%d",&n,&state);
+                    //printf("LTE_CHECK_CEREG n[%d] stat[%d]",n,state);
+                    if(state==1||state==5)
+                    {
+                        strcpy(nettype_msg,"4G");
+                        set_dial_sta(LTE_CHECK_DIAL);
+                    }
+                    else
+                    {
+                        if(search_cnt>NET_SEARCH_CNT)
+                        {
+                            return NET_NO_REGISTER;
+                        }
                     }
                 }
-
-                ret = uart_send_cmd(fd,"AT+CEREG?\r\n",rcv_buf,sizeof(rcv_buf),1000*2);
-                sscanf(rcv_buf,"\n+CEREG: %d,%d",&n,&state);
-                //printf("LTE_CHECK_CEREG n[%d] stat[%d]",n,state);
-                if(state==1||state==5)
-                {
-                    strcpy(nettype_msg,"4G");
-                    set_dial_sta(LTE_CHECK_DIAL);
-                }
-                else
-                {
-                    if(search_cnt>NET_SEARCH_CNT)
-                    {
-                        return NET_NO_REGISTER;
-                    }
-                }
-            }
-            break;
+                break;
 
             case LTE_GOBINET_DIAL:
-             if(fibocom_module_type==0)
-             {
-                 ret = uart_send_cmd(fd,"AT$QCRMCALL=1,1,3\r\n",rcv_buf,sizeof(rcv_buf),1000*10);
-                printf("LTE_GOBINET_DIAL recv[%s]\n",rcv_buf);
-                if(strstr(rcv_buf,"$QCRMCALL:"))
+                if(fibocom_module_type==0)
                 {
-                    set_dial_sta(LTE_CHECK_DIAL);
-                    break;
+                    ret = uart_send_cmd(fd,"AT$QCRMCALL=1,1,3\r\n",rcv_buf,sizeof(rcv_buf),1000*10);
+                    printf("LTE_GOBINET_DIAL recv[%s]\n",rcv_buf);
+                    if(strstr(rcv_buf,"$QCRMCALL:"))
+                    {
+                        set_dial_sta(LTE_CHECK_DIAL);
+                        break;
+                    }
+                    else
+                    {
+                        if(search_cnt>NET_SEARCH_CNT)
+                        {
+                            return NET_DIAL_FAIL;
+                        }
+                    }
+
                 }
                 else
                 {
-                    if(search_cnt>NET_SEARCH_CNT)
+                    ret = uart_send_cmd(fd,"AT+GTRNDIS=1,1\r\n",rcv_buf,sizeof(rcv_buf),1000*10);
+                    printf("LTE_GOBINET_DIAL recv[%s]\n",rcv_buf);
+                    if(strstr(rcv_buf,"OK"))
                     {
-                        return NET_DIAL_FAIL;
+                        set_dial_sta(LTE_CHECK_DIAL);
+                        break;
                     }
-                }
-
-             }
-             else
-             {
-                 ret = uart_send_cmd(fd,"AT+GTRNDIS=1,1\r\n",rcv_buf,sizeof(rcv_buf),1000*10);
-                printf("LTE_GOBINET_DIAL recv[%s]\n",rcv_buf);
-                if(strstr(rcv_buf,"OK"))
-                {
-                    set_dial_sta(LTE_CHECK_DIAL);
-                    break;
-                }
-                else
-                {
-                    if(search_cnt>NET_SEARCH_CNT)
+                    else
                     {
-                        return NET_DIAL_FAIL;
+                        if(search_cnt>NET_SEARCH_CNT)
+                        {
+                            return NET_DIAL_FAIL;
+                        }
                     }
-                }
 
-             }
-             sleep(5);
-            break;
+                }
+                sleep(5);
+                break;
 
             case LTE_CHECK_DIAL:
 
-            if(fibocom_module_type==0)
-            {
-                ret = uart_send_cmd(fd,"AT$QCRMCALL?\r\n",rcv_buf,sizeof(rcv_buf),1000*2);
-                printf("LTE_CHECK_DIAL rcv_buf[%s]\n",rcv_buf);
-                if(strstr(rcv_buf,"$QCRMCALL"))
+                if(fibocom_module_type==0)
                 {
-                    system("ifconfig usb0 down");
-                    sleep(1);
-                    system("ifconfig usb0 up");
-                    return NET_CONNECT_SUCCESS;
+                    ret = uart_send_cmd(fd,"AT$QCRMCALL?\r\n",rcv_buf,sizeof(rcv_buf),1000*2);
+                    printf("LTE_CHECK_DIAL rcv_buf[%s]\n",rcv_buf);
+                    if(strstr(rcv_buf,"$QCRMCALL"))
+                    {
+                        system("ifconfig usb0 down");
+                        sleep(1);
+                        system("ifconfig usb0 up");
+                        return NET_CONNECT_SUCCESS;
+                    }
+                    else
+                    {
+                        set_dial_sta(LTE_GOBINET_DIAL);
+                    }
                 }
                 else
                 {
-                    set_dial_sta(LTE_GOBINET_DIAL);
+                    ret = uart_send_cmd(fd,"AT+GTRNDIS?\r\n",rcv_buf,sizeof(rcv_buf),1000*2);
+                    printf("LTE_CHECK_DIAL rcv_buf[%s]\n",rcv_buf);
+                    if(strstr(rcv_buf,"+GTRNDIS: 1"))
+                    {
+                        return NET_CONNECT_SUCCESS;
+                    }
+                    else
+                    {
+                        set_dial_sta(LTE_GOBINET_DIAL);
+                    }
                 }
-            }
-            else
-            {
-                ret = uart_send_cmd(fd,"AT+GTRNDIS?\r\n",rcv_buf,sizeof(rcv_buf),1000*2);
-                printf("LTE_CHECK_DIAL rcv_buf[%s]\n",rcv_buf);
-                if(strstr(rcv_buf,"+GTRNDIS: 1"))
-                {
-                    return NET_CONNECT_SUCCESS;
-                }
-                else
-                {
-                    set_dial_sta(LTE_GOBINET_DIAL);
-                }
-            }
-                
-            break;
+
+                break;
         }
         usleep(1000*300);
     }
     return 0;
 }
-  
+
 
 //void * lte_dial_task(void* arg)
 int main(int argc, char **argv)
@@ -420,14 +420,14 @@ lte_dial_enter:
             goto lte_dial_enter;
         }
     }
-    
-        ret = uart_init(fd,115200,0,8,1,'N');
-        if(ret<0)
-        {
-            uart_close(fd);
-            sleep(2);
-            goto lte_dial_enter;
-        }
+
+    ret = uart_init(fd,115200,0,8,1,'N');
+    if(ret<0)
+    {
+        uart_close(fd);
+        sleep(2);
+        goto lte_dial_enter;
+    }
 
     sleep(1);
     //close echo
@@ -449,7 +449,7 @@ lte_dial_enter:
                 sleep(1);
                 goto lte_dial_enter;
             }
-        break;
+            break;
         case 1: //FM650
             if(strstr(rcv_buf,"FM650"))
             {
@@ -463,30 +463,30 @@ lte_dial_enter:
                 sleep(1);
                 goto lte_dial_enter;
             }
-        break;
+            break;
 
         default:
-        break;
+            break;
     }
-    
+
     memset(rcv_buf,0,sizeof(rcv_buf));
     ret = uart_send_cmd(fd,"AT+GTAUTOCONNECT=0\r\n",rcv_buf,sizeof(rcv_buf),1000*2);
     // if(strstr(rcv_buf,"OK"))
     // {
     //    
     // }
-//hilink default SIM2
+    //hilink default SIM2
     memset(rcv_buf,0,sizeof(rcv_buf));
     ret = uart_send_cmd(fd,"AT+GTDUALSIM=1\r\n",rcv_buf,sizeof(rcv_buf),1000*2);
     if(strstr(rcv_buf,"OK"))
     {
-       printf("set sim2 success\n"); 
+        printf("set sim2 success\n"); 
     }
 
     while(1)
     {
 
-//value:    CONNECT   DISCONECT
+        //value:    CONNECT   DISCONECT
         //uci_load_file();
         // set_netstatus_info("DISCONNECT");
         memset(netstatus_msg,0,sizeof(netstatus_msg));
@@ -501,9 +501,9 @@ lte_dial_enter:
         switch(ret)
         {
             case NET_CONNECT_SUCCESS:
-			// set_netstatus_info("CONNECT");
-            memset(netstatus_msg,0,sizeof(netstatus_msg));
-            strcpy(netstatus_msg,"CONNECT");
+                // set_netstatus_info("CONNECT");
+                memset(netstatus_msg,0,sizeof(netstatus_msg));
+                strcpy(netstatus_msg,"CONNECT");
                 while(1)
                 {
                     //check dial status
@@ -527,7 +527,7 @@ lte_dial_enter:
                         {
                             //5G
                             strcpy(nettype_msg,"5G");
-                        
+
                         }
                         else if(((stat==1||stat==5)==0)&&((state_5g==1||state_5g==5)))
                         {
@@ -554,7 +554,7 @@ lte_dial_enter:
                         int ss_rsrp=0;
                         int ss_rsrq=0;
                         char str_ss_rsrp[10];
-                        
+
                         // ss_rsrp   //AT+CESQ// +CESQ: 99,99,255,255,26,64,255,255,255
                         memset(at_rcv,0,sizeof(at_rcv));
                         ret = uart_send_cmd(fd,"AT+CESQ\r\n",at_rcv,sizeof(at_rcv),1000*2);
@@ -585,14 +585,14 @@ lte_dial_enter:
                     }
                     sleep(5);
                     //check dial
-                     memset(at_rcv,0,sizeof(at_rcv));
+                    memset(at_rcv,0,sizeof(at_rcv));
                     if(fibocom_module_type==0) //fm150
                     {
                         ret = uart_send_cmd(fd,"AT$QCRMCALL?\r\n",at_rcv,sizeof(at_rcv),1000*3);
-                            if(strstr(at_rcv,"$QCRMCALL: 1,V4")==NULL)
-                            {
-                                break;
-                            }
+                        if(strstr(at_rcv,"$QCRMCALL: 1,V4")==NULL)
+                        {
+                            break;
+                        }
                     }
                     else
                     {
@@ -606,7 +606,7 @@ lte_dial_enter:
                     sleep(2);
                 }
 
-            break;
+                break;
             case NET_NO_REGISTER:
             case NET_NO_ACTIVE:
             case NET_DIAL_FAIL:
@@ -616,15 +616,15 @@ lte_dial_enter:
                 {
 
                 }
-                 sleep(2);
-                 int cfun_cnt=0;
+                sleep(2);
+                int cfun_cnt=0;
                 while(1)
                 {  
                     memset(at_rcv,0,sizeof(at_rcv));
                     ret = uart_send_cmd(fd,"AT+CFUN=1\r\n",at_rcv,sizeof(at_rcv),1000*5);
                     if(strstr(at_rcv,"OK"))
                     {
-                        
+
                     }
                     sleep(1);
                     memset(at_rcv,0,sizeof(at_rcv));
@@ -645,7 +645,7 @@ lte_dial_enter:
 
                     }
                 }
-            break;
+                break;
 
         }
     }
