@@ -8,7 +8,6 @@
 #include "uci_file.h"
 
 profile_t f_profile_5g;
-f_profile_5g.apn = "hasmxkxhg201s.5gha.njiot";
 
 int lte_dial_index = 0;
 int fd = 0;                            //文件描述符
@@ -124,115 +123,121 @@ int lte_net_dial_init(void)
                 }
                 break;
             case LTE_CHECK_CSQ:
-                int rssi=0;
-                int ber=0;
-                int ss_sinr=0;
-                int ss_rsrp=0;
-                int ss_rsrq=0;
-                char str_rssi[10];
+                {
+                    int rssi=0;
+                    int ber=0;
+                    int ss_sinr=0;
+                    int ss_rsrp=0;
+                    int ss_rsrq=0;
+                    char str_rssi[10];
 
-                ret = uart_send_cmd(fd, "AT+CSQ?\r\n", rcv_buf, sizeof(rcv_buf), 1000*2);
-                sscanf(rcv_buf, "\n+CSQ: %d, %d", &rssi, &ber);
-                memset(str_rssi, 0, sizeof(str_rssi));
-                sprintf(str_rssi, "%d", rssi);
-                if ((rssi == 0) || (rssi == 99)) {
-                    if(search_cnt > NET_SEARCH_CNT) {
-                        return NET_NO_SIGNAL;
+                    ret = uart_send_cmd(fd, "AT+CSQ?\r\n", rcv_buf, sizeof(rcv_buf), 1000*2);
+                    sscanf(rcv_buf, "\n+CSQ: %d, %d", &rssi, &ber);
+                    memset(str_rssi, 0, sizeof(str_rssi));
+                    sprintf(str_rssi, "%d", rssi);
+                    if ((rssi == 0) || (rssi == 99)) {
+                        if(search_cnt > NET_SEARCH_CNT) {
+                            return NET_NO_SIGNAL;
+                        }
+                    } else {
+                        set_dial_sta(LTE_COPS_INFO);
                     }
-                } else {
-                    set_dial_sta(LTE_COPS_INFO);
-                }
 
-                //AT+CESQ// +CESQ: 99, 99, 255, 255, 26, 64, 255, 255, 255
-                memset(rcv_buf, 0, sizeof(rcv_buf));
-                ret = uart_send_cmd(fd, "AT+CESQ\r\n", rcv_buf, sizeof(rcv_buf), 1000*2);
-                sscanf(rcv_buf, "\n+CESQ: %*[^, ], %*[^, ], %*[^, ], %*[^, ], %*[^, ], %*[^, ], %d, %d, %d, \r\n", &ss_rsrq, &ss_rsrp, &ss_sinr);
-                printf("[CESQ] Extended Signal Quality: rssi [%d] ss_rsrp [%d]", rssi, ss_rsrp);
-                if ((ss_rsrp==255) || (ss_rsrp==0)) {
-                    if (search_cnt > NET_SEARCH_CNT) {
-                        return NET_NO_SIGNAL;
+                    //AT+CESQ// +CESQ: 99, 99, 255, 255, 26, 64, 255, 255, 255
+                    memset(rcv_buf, 0, sizeof(rcv_buf));
+                    ret = uart_send_cmd(fd, "AT+CESQ\r\n", rcv_buf, sizeof(rcv_buf), 1000*2);
+                    sscanf(rcv_buf, "\n+CESQ: %*[^, ], %*[^, ], %*[^, ], %*[^, ], %*[^, ], %*[^, ], %d, %d, %d, \r\n", &ss_rsrq, &ss_rsrp, &ss_sinr);
+                    printf("[CESQ] Extended Signal Quality: rssi [%d] ss_rsrp [%d]", rssi, ss_rsrp);
+                    if ((ss_rsrp==255) || (ss_rsrp==0)) {
+                        if (search_cnt > NET_SEARCH_CNT) {
+                            return NET_NO_SIGNAL;
+                        }
+                    } else {
+                        set_dial_sta(LTE_COPS_INFO);
                     }
-                } else {
-                    set_dial_sta(LTE_COPS_INFO);
                 }
                 break;
             case LTE_COPS_INFO:
-                int mode=0;
-                int format=0;
-                char oper_type[30]={0};
-                int act=0;
-                char at_cmd_temp[512]={0};
-                char mgauth_cmd_temp[512]={0};
-                memset(at_cmd_temp, 0, sizeof(at_cmd_temp));
-                memset(mgauth_cmd_temp, 0, sizeof(mgauth_cmd_temp));
+                {
+                    int mode=0;
+                    int format=0;
+                    char oper_type[30]={0};
+                    int act=0;
+                    char at_cmd_temp[512]={0};
+                    char mgauth_cmd_temp[512]={0};
+                    memset(at_cmd_temp, 0, sizeof(at_cmd_temp));
+                    memset(mgauth_cmd_temp, 0, sizeof(mgauth_cmd_temp));
 
-                if((f_profile_5g.enable_5g == "1") && (f_profile_5g.apn != NULL)) {
-                    if((f_profile_5g.user != NULL) && (f_profile_5g.pwd != NULL)) {
-                        sprintf(mgauth_cmd_temp, "AT+MGAUTH=1, 0, \"%s\", \"%s\"\r\n", f_profile_5g.user, f_profile_5g.pwd);
+                    if((f_profile_5g.enable_5g == 1) && (f_profile_5g.apn != NULL)) {
+                        if((f_profile_5g.user != NULL) && (f_profile_5g.pwd != NULL)) {
+                            sprintf(mgauth_cmd_temp, "AT+MGAUTH=1, 0, \"%s\", \"%s\"\r\n", f_profile_5g.user, f_profile_5g.pwd);
+                            memset(rcv_buf, 0, sizeof(rcv_buf));
+                            ret = uart_send_cmd(fd, mgauth_cmd_temp, rcv_buf, sizeof(rcv_buf), 1000*2);
+                            if(strstr(rcv_buf, "OK")) {
+                                printf("[OK] Set type of authentication: name[%s] pwd[%s]\n", f_profile_5g.user, f_profile_5g.pwd);
+                            }
+                        }
+                        sprintf(at_cmd_temp, "AT+CGDCONT=1, \"IPV4V6\", \"%s\"\r\n", f_profile_5g.apn);
+                    } else {
+                        /* COPS: Operator Selection */
+                        ret = uart_send_cmd(fd, "AT+COPS?\r\n", rcv_buf, sizeof(rcv_buf), 1000*2);
+                        memset(oper_type, 0, sizeof(oper_type));
+                        sscanf(rcv_buf, "\n+COPS: %d, %d, \"%[^\"]\", %d", &mode, &format, oper_type, &act);
+                        // printf("uart mode[%d]format[%d]oper_type[%s]act[%d]\n", mode, format, oper_type, act);
+
                         memset(rcv_buf, 0, sizeof(rcv_buf));
-                        ret = uart_send_cmd(fd, mgauth_cmd_temp, rcv_buf, sizeof(rcv_buf), 1000*2);
-                        if(strstr(rcv_buf, "OK")) {
-                            printf("[OK] Set type of authentication: name[%s] pwd[%s]\n", f_profile_5g.user, f_profile_5g.pwd);
+                        if(strstr(oper_type, "CHINA MOBILE")){
+                            memcpy(at_cmd_temp, CSTT_CHINA_MOBILE, strlen(CSTT_CHINA_MOBILE));
+                        } else if(strstr(oper_type, "CHN-UNICOM")) {
+                            memcpy(at_cmd_temp, CSTT_CHINA_UNICOM, strlen(CSTT_CHINA_UNICOM));
+                        } else if(strstr(oper_type, "CHN-CT")) {
+                            memcpy(at_cmd_temp, CSTT_CHINA_TELECOM, strlen(CSTT_CHINA_TELECOM));
                         }
                     }
-                    sprintf(at_cmd_temp, "AT+CGDCONT=1, \"IPV4V6\", \"%s\"\r\n", f_profile_5g.apn);
-                } else {
-                    /* COPS: Operator Selection */
-                    ret = uart_send_cmd(fd, "AT+COPS?\r\n", rcv_buf, sizeof(rcv_buf), 1000*2);
-                    memset(oper_type, 0, sizeof(oper_type));
-                    sscanf(rcv_buf, "\n+COPS: %d, %d, \"%[^\"]\", %d", &mode, &format, oper_type, &act);
-                    // printf("uart mode[%d]format[%d]oper_type[%s]act[%d]\n", mode, format, oper_type, act);
 
                     memset(rcv_buf, 0, sizeof(rcv_buf));
-                    if(strstr(oper_type, "CHINA MOBILE")){
-                        memcpy(at_cmd_temp, CSTT_CHINA_MOBILE, strlen(CSTT_CHINA_MOBILE));
-                    } else if(strstr(oper_type, "CHN-UNICOM")) {
-                        memcpy(at_cmd_temp, CSTT_CHINA_UNICOM, strlen(CSTT_CHINA_UNICOM));
-                    } else if(strstr(oper_type, "CHN-CT")) {
-                        memcpy(at_cmd_temp, CSTT_CHINA_TELECOM, strlen(CSTT_CHINA_TELECOM));
+                    ret = uart_send_cmd(fd, at_cmd_temp, rcv_buf, sizeof(rcv_buf), 1000*2);
+                    if(strstr(rcv_buf, "OK")) {
+                        set_dial_sta(LTE_CHECK_CEREG);
+                    } else {
+                        if(search_cnt>NET_SEARCH_CNT) {
+                            return NET_NO_REGISTER;
+                        }
+                        break;
                     }
-                }
-
-                memset(rcv_buf, 0, sizeof(rcv_buf));
-                ret = uart_send_cmd(fd, at_cmd_temp, rcv_buf, sizeof(rcv_buf), 1000*2);
-                if(strstr(rcv_buf, "OK")) {
-                    set_dial_sta(LTE_CHECK_CEREG);
-                } else {
-                    if(search_cnt>NET_SEARCH_CNT) {
-                        return NET_NO_REGISTER;
-                    }
-                    break;
                 }
                 break;
             case LTE_CHECK_CEREG:
-                int n=0;
-                int state=0;
-                int n_5g=0;
-                int state_5g=0;
-                sleep(2);
+                {
+                    int n=0;
+                    int state=0;
+                    int n_5g=0;
+                    int state_5g=0;
+                    sleep(2);
 
-                ret = uart_send_cmd(fd, "AT+C5GREG?\r\n", rcv_buf, sizeof(rcv_buf), 1000*2);
-                sscanf(rcv_buf, "\n+C5GREG: %d, %d", &n_5g, &state_5g);
-                if((state_5g==1) || (state_5g==5)) {
-                    f_profile_5g.enable_5g = "1";
-                    strcpy(nettype_msg, "5G");
-                    set_dial_sta(LTE_CHECK_DIAL);
-                    break;
-                } else {
-                    f_profile_5g.enable_5g = "0";
-                    if(search_cnt>NET_SEARCH_CNT) {
-                        return NET_NO_REGISTER;
+                    ret = uart_send_cmd(fd, "AT+C5GREG?\r\n", rcv_buf, sizeof(rcv_buf), 1000*2);
+                    sscanf(rcv_buf, "\n+C5GREG: %d, %d", &n_5g, &state_5g);
+                    if((state_5g==1) || (state_5g==5)) {
+                        f_profile_5g.enable_5g = 1;
+                        strcpy(nettype_msg, "5G");
+                        set_dial_sta(LTE_CHECK_DIAL);
+                        break;
+                    } else {
+                        f_profile_5g.enable_5g = 0;
+                        if(search_cnt>NET_SEARCH_CNT) {
+                            return NET_NO_REGISTER;
+                        }
                     }
-                }
 
-                ret = uart_send_cmd(fd, "AT+CEREG?\r\n", rcv_buf, sizeof(rcv_buf), 1000*2);
-                sscanf(rcv_buf, "\n+CEREG: %d, %d", &n, &state);
-                if((state==1) || (state==5)) {
-                    strcpy(nettype_msg, "4G");
-                    set_dial_sta(LTE_CHECK_DIAL);
-                } else {
-                    if(search_cnt > NET_SEARCH_CNT) {
-                        return NET_NO_REGISTER;
+                    ret = uart_send_cmd(fd, "AT+CEREG?\r\n", rcv_buf, sizeof(rcv_buf), 1000*2);
+                    sscanf(rcv_buf, "\n+CEREG: %d, %d", &n, &state);
+                    if((state==1) || (state==5)) {
+                        strcpy(nettype_msg, "4G");
+                        set_dial_sta(LTE_CHECK_DIAL);
+                    } else {
+                        if(search_cnt > NET_SEARCH_CNT) {
+                            return NET_NO_REGISTER;
+                        }
                     }
                 }
                 break;
@@ -308,20 +313,21 @@ int main(int argc, char **argv)
 lte_dial_enter:
     memset(imei_msg, 0, sizeof(imei_msg));
     strcpy(imei_msg, "UNKNOWN");
+    strcpy(f_profile_5g.apn, "hasmxkxhg201s.5gha.njiot");
 
     /* 打开串口，返回文件描述符 */
     if (fibocom_module_type == 0) {
         fd = uart_open(UART_PATH_FM150);
         if (fd<0) {
             printf("open %s fail [%d]\n", UART_PATH_FM150, fd);
-            sleep(1);
+            sleep(10);
             goto lte_dial_enter;
         }
     } else {
         fd = uart_open(UART_PATH_FM650);
         if (fd<0) {
             printf("open %s fail [%d]\n", UART_PATH_FM650, fd);
-            sleep(1);
+            sleep(10);
             goto lte_dial_enter;
         }
     }
@@ -424,7 +430,7 @@ lte_dial_enter:
                         int ss_rsrq = 0;
                         char str_ss_rsrp[10];
 
-                        f_profile_5g.enable_5g = "1";
+                        f_profile_5g.enable_5g = 1;
 
                         // ss_rsrp   //AT+CESQ// +CESQ: 99, 99, 255, 255, 26, 64, 255, 255, 255
                         memset(at_rcv, 0, sizeof(at_rcv));
@@ -440,7 +446,7 @@ lte_dial_enter:
                         int rssi=0;
                         int ber=0;
                         char str_rssi[10];
-                        f_profile_5g.enable_5g = "0";
+                        f_profile_5g.enable_5g = 0;
                         //RSSI
                         memset(at_rcv, 0, sizeof(at_rcv));
                         ret = uart_send_cmd(fd, "AT+CSQ?\r\n", at_rcv, sizeof(at_rcv), 1000*2);
@@ -454,7 +460,7 @@ lte_dial_enter:
                         sprintf(str_rssi, "%d", rssi);
                         strcpy(rssi_msg, str_rssi);
                     } else {
-                        f_profile_5g.enable_5g = "0";
+                        f_profile_5g.enable_5g = 0;
                         strcpy(rssi_msg, "UNKNOWN");
                     }
                     sleep(5);
@@ -474,10 +480,12 @@ lte_dial_enter:
                         }
                     }
                     sleep(2);
+                    if (cuiot_udhcpc_stat == 0) {
+                        system("udhcpc -i usb0 -t 5 -n -q -f &");
+                        cuiot_udhcpc_stat = 1;
+                        sleep(10);
+                    }
                 }
-                if (cuiot_udhcpc_stat == 0)
-                    system("udhcpc -i usb0 -t 5 -n -q -f &");
-
                 break;
             case NET_NO_REGISTER:
             case NET_NO_ACTIVE:
