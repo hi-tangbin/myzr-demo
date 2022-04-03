@@ -382,7 +382,8 @@ int lte_net_dial_init(void)
 }
   
 
-void * lte_dial_task(void* arg)
+//void * lte_dial_task(void* arg)
+int main(int argc, char **argv)
 {
     //  uart_init
     char at_rcv[255]={0};
