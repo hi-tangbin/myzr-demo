@@ -14,6 +14,11 @@ char *UART_PATH_FM650="/dev/ttyUSB0";
 static int search_cnt=0;
 char rcv_buf[255]={0};
 
+char sim_msg[20]={0};
+char rssi_msg[10]={0};
+char nettype_msg[10]={0};
+char netstatus_msg[20]={0};
+char imei_msg[25]={0};
 
 #define NET_SEARCH_CNT          10
 
