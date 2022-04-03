@@ -1,0 +1,7 @@
+all: lte_dial
+
+lte_dial:
+	$(CC) $(CFLAGS) -o $@ myapp2.c -Wall
+
+clean:
+	rm -f lte_dial

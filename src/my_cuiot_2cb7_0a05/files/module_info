@@ -1,0 +1,6 @@
+config info  "fibocom_5g"
+    option  sim "no sim"
+    option  imei "123456789"
+    option  rssi "0"
+    option  nettype "5G"
+    option  netstatus "DISCONNECT"

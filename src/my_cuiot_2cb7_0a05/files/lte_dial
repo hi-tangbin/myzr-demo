@@ -1,0 +1,19 @@
+#!/bin/sh /etc/rc.common                                                        
+# Copyright (C) 2015 OpenWrt.org    
+
+START=97
+STOP=10
+
+start()  {
+	/usr/bin/lte_dial
+}
+stop() {
+	killall lte_dial
+}
+
+restart() {
+	stop
+	sleep 1
+	start
+}
+
