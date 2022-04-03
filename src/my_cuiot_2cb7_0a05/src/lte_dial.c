@@ -11,7 +11,7 @@ profile_t f_profile_5g;
 
 int lte_dial_index=0;
 int fd=0;                            //文件描述符
-int fibocom_module_type=0;//0:FM150  //1:FM650
+int fibocom_module_type=1;//0:FM150  //1:FM650
 char *UART_PATH_FM150="/dev/ttyUSB2";
 char *UART_PATH_FM650="/dev/ttyUSB0";
 static int search_cnt=0;
@@ -546,6 +546,15 @@ lte_dial_enter:
                         }
                     }
                     sleep(1);
+                    {
+                        memset(at_rcv,0,sizeof(at_rcv));
+                        ret = uart_send_cmd(fd,"AT+CGDCONT=1,\"IPV4V6\",\"hasmxkxhg201s.5gha.njiot\"\r\n",at_rcv,sizeof(at_rcv),1000*2);
+                        if(strstr(at_rcv,"OK"))
+                        {
+                            printf("SET CGDCONT SUCCESS\n"); 
+                        }
+                    }
+                    sleep(1);
                     //CSQ
                     memset(rssi_msg,0,sizeof(rssi_msg));
                     if(strstr(nettype_msg,"5G"))
@@ -564,7 +573,6 @@ lte_dial_enter:
                         memset(str_ss_rsrp,0,sizeof(str_ss_rsrp));
                         sprintf(str_ss_rsrp,"%d",ss_rsrp);
                         strcpy(rssi_msg,str_ss_rsrp);
-
                     }
                     else if(strstr(nettype_msg,"4G"))
                     {
