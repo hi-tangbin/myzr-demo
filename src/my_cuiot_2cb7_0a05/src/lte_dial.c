@@ -2,6 +2,7 @@
 #include "uart.h"
 #include "stdio.h"
 #include <unistd.h>
+#include <stdlib.h>
 #include "string.h"
 #include "process_fifo_msg.h"
 #include "uci_file.h"
