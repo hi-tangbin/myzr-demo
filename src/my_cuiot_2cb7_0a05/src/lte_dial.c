@@ -12,7 +12,7 @@ profile_t f_profile_5g;
 int lte_dial_index=0;
 int fd=0;                            //文件描述符
 int fibocom_module_type=1;//0:FM150  //1:FM650
-char *UART_PATH_FM150="/dev/ttyUSB2";
+//char *UART_PATH_FM150="/dev/ttyUSB2";
 char *UART_PATH_FM650="/dev/ttyUSB0";
 static int search_cnt=0;
 char rcv_buf[255]={0};
@@ -402,10 +402,10 @@ lte_dial_enter:
     strcpy(imei_msg,"UNKNOWN");
     if(fibocom_module_type==0) //fm150
     {
-        fd = uart_open(UART_PATH_FM150); //打开串口，返回文件描述符
+        fd = uart_open(UART_PATH_FM650); //打开串口，返回文件描述符
         if(fd<0)
         {
-            printf("open %s fail [%d]\n",UART_PATH_FM150,fd);
+            printf("open %s fail [%d]\n",UART_PATH_FM650,fd);
             sleep(1);
             goto lte_dial_enter;
         }
@@ -454,7 +454,7 @@ lte_dial_enter:
             if(strstr(rcv_buf,"FM650"))
             {
                 memset(rcv_buf,0,sizeof(rcv_buf));
-                ret = uart_send_cmd(fd,"AT+GTUSBMODE=37\r\n",rcv_buf,sizeof(rcv_buf),1000*2);  
+                ret = uart_send_cmd(fd,"AT+GTUSBMODE=36\r\n",rcv_buf,sizeof(rcv_buf),1000*2);  
             }
             else
             {
@@ -477,10 +477,10 @@ lte_dial_enter:
     // }
     //hilink default SIM2
     memset(rcv_buf,0,sizeof(rcv_buf));
-    ret = uart_send_cmd(fd,"AT+GTDUALSIM=1\r\n",rcv_buf,sizeof(rcv_buf),1000*2);
+    ret = uart_send_cmd(fd,"AT+GTDUALSIM=0\r\n",rcv_buf,sizeof(rcv_buf),1000*2);
     if(strstr(rcv_buf,"OK"))
     {
-        printf("set sim2 success\n"); 
+        printf("set sim1 success\n"); 
     }
 
     while(1)
