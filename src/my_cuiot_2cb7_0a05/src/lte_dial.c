@@ -49,9 +49,9 @@ typedef enum {
 	NET_DIAL_FAIL = -8,
 } netInitInfo;
 
-static char *CSTT_CHINA_MOBILE = "AT+CGDCONT=1, \"IPV4V6\", \"CMNET\"\r\n";
-static char *CSTT_CHINA_UNICOM = "AT+CGDCONT=1, \"IPV4V6\", \"3GNET\"\r\n";
-static char *CSTT_CHINA_TELECOM = "AT+CGDCONT=1, \"IPV4V6\", \"CTNET\"\r\n";
+static char *CSTT_CHINA_MOBILE = "AT+CGDCONT=1,\"IPV4V6\",\"CMNET\"\r\n";
+static char *CSTT_CHINA_UNICOM = "AT+CGDCONT=1,\"IPV4V6\",\"3GNET\"\r\n";
+static char *CSTT_CHINA_TELECOM = "AT+CGDCONT=1,\"IPV4V6\",\"CTNET\"\r\n";
 // static char *CMD_MSG_AT         = "AT\r\n";
 // static char *CMD_MSG_ATE0       = "ATE0\r\n";
 // static char *CMD_MSG_CPIN       = "AT+CPIN?\r\n";
@@ -133,7 +133,7 @@ int lte_net_dial_init(void)
 				char str_rssi[10];
 
 				ret = uart_send_cmd(fd, "AT+CSQ?\r\n", rcv_buf, sizeof(rcv_buf), 1000 * 2);
-				sscanf(rcv_buf, "\n+CSQ: %d, %d", &rssi, &ber);
+				sscanf(rcv_buf, "\n+CSQ: %d,%d", &rssi, &ber);
 				memset(str_rssi, 0, sizeof(str_rssi));
 				sprintf(str_rssi, "%d", rssi);
 				if ((rssi == 0) || (rssi == 99)) {
@@ -147,8 +147,7 @@ int lte_net_dial_init(void)
 				//AT+CESQ// +CESQ: 99, 99, 255, 255, 26, 64, 255, 255, 255
 				memset(rcv_buf, 0, sizeof(rcv_buf));
 				ret = uart_send_cmd(fd, "AT+CESQ\r\n", rcv_buf, sizeof(rcv_buf), 1000 * 2);
-				sscanf(rcv_buf,
-				       "\n+CESQ: %*[^, ], %*[^, ], %*[^, ], %*[^, ], %*[^, ], %*[^, ], %d, %d, %d, \r\n",
+				sscanf(rcv_buf, "\n+CESQ: %*[^,],%*[^,],%*[^,],%*[^,],%*[^,],%*[^,],%d,%d,%d,\r\n",
 				       &ss_rsrq, &ss_rsrp, &ss_sinr);
 				printf("[CESQ] Extended Signal Quality: rssi [%d] ss_rsrp [%d]", rssi, ss_rsrp);
 				if ((ss_rsrp == 255) || (ss_rsrp == 0)) {
@@ -184,12 +183,12 @@ int lte_net_dial_init(void)
 							       f_profile_5g.user, f_profile_5g.pwd);
 						}
 					}
-					sprintf(at_cmd_temp, "AT+CGDCONT=1, \"IPV4V6\", \"%s\"\r\n", f_profile_5g.apn);
+					sprintf(at_cmd_temp, "AT+CGDCONT=1,\"IPV4V6\",\"%s\"\r\n", f_profile_5g.apn);
 				} else {
 					/* COPS: Operator Selection */
 					ret = uart_send_cmd(fd, "AT+COPS?\r\n", rcv_buf, sizeof(rcv_buf), 1000 * 2);
 					memset(oper_type, 0, sizeof(oper_type));
-					sscanf(rcv_buf, "\n+COPS: %d, %d, \"%[^\"]\", %d", &mode, &format, oper_type,
+					sscanf(rcv_buf, "\n+COPS: %d,%d,\"%[^\"]\",%d", &mode, &format, oper_type,
 					       &act);
 					// printf("uart mode[%d]format[%d]oper_type[%s]act[%d]\n", mode, format, oper_type, act);
 
@@ -238,7 +237,7 @@ int lte_net_dial_init(void)
 				}
 
 				ret = uart_send_cmd(fd, "AT+CEREG?\r\n", rcv_buf, sizeof(rcv_buf), 1000 * 2);
-				sscanf(rcv_buf, "\n+CEREG: %d, %d", &n, &state);
+				sscanf(rcv_buf, "\n+CEREG: %d,%d", &n, &state);
 				if ((state == 1) || (state == 5)) {
 					strcpy(nettype_msg, "4G");
 					set_dial_sta(LTE_CHECK_DIAL);
@@ -251,7 +250,7 @@ int lte_net_dial_init(void)
 			break;
 		case LTE_GOBINET_DIAL:
 			if (fibocom_module_type == 0) {
-				ret = uart_send_cmd(fd, "AT$QCRMCALL=1, 1, 3\r\n", rcv_buf, sizeof(rcv_buf), 1000 * 10);
+				ret = uart_send_cmd(fd, "AT$QCRMCALL=1,1,3\r\n", rcv_buf, sizeof(rcv_buf), 1000 * 10);
 				printf("LTE_GOBINET_DIAL recv[%s]\n", rcv_buf);
 				if (strstr(rcv_buf, "$QCRMCALL:")) {
 					set_dial_sta(LTE_CHECK_DIAL);
@@ -410,13 +409,13 @@ lte_dial_enter:
 
 					memset(at_rcv, 0, sizeof(at_rcv));
 					ret = uart_send_cmd(fd, "AT+CEREG?\r\n", at_rcv, sizeof(at_rcv), 1000 * 2);
-					sscanf(at_rcv, "\n+CEREG: %d, %d", &n, &stat);
+					sscanf(at_rcv, "\n+CEREG: %d,%d", &n, &stat);
 					printf("[CEREG] EPS Network Registration status: n[%d] stat[%d]\n", n, stat);
 					sleep(1);
 
 					memset(at_rcv, 0, sizeof(at_rcv));
 					ret = uart_send_cmd(fd, "AT+C5GREG?\r\n", at_rcv, sizeof(at_rcv), 1000 * 2);
-					sscanf(at_rcv, "\n+C5GREG: %d, %d", &n_5g, &stat_5g);
+					sscanf(at_rcv, "\n+C5GREG: %d,%d", &n_5g, &state_5g);
 					printf("[CEREG] NR Network Registration status n[%d] stat[%d]\n", n_5g,
 					       stat_5g);
 
@@ -447,7 +446,7 @@ lte_dial_enter:
 					memset(at_rcv, 0, sizeof(at_rcv));
 					ret = uart_send_cmd(fd, "AT+CESQ\r\n", at_rcv, sizeof(at_rcv), 1000 * 2);
 					sscanf(at_rcv,
-					       "\n+CESQ: %*[^, ], %*[^, ], %*[^, ], %*[^, ], %*[^, ], %*[^, ], %d, %d, %d, \r\n",
+					       "\n+CESQ: %*[^,],%*[^,],%*[^,],%*[^,],%*[^,],%*[^,],%d,%d,%d,\r\n",
 					       &ss_rsrq, &ss_rsrp, &ss_sinr);
 					printf("[CESQ] Extended Signal Quality: ss_rsrp[%d]", ss_rsrp);
 					sleep(1);
@@ -463,7 +462,7 @@ lte_dial_enter:
 					//RSSI
 					memset(at_rcv, 0, sizeof(at_rcv));
 					ret = uart_send_cmd(fd, "AT+CSQ?\r\n", at_rcv, sizeof(at_rcv), 1000 * 2);
-					sscanf(at_rcv, "\n+CSQ: %d, %d", &rssi, &ber);
+					sscanf(at_rcv, "\n+CSQ: %d,%d", &rssi, &ber);
 					if (strstr(at_rcv, "OK")) {
 						printf("[CSQ] Signal Strength: rssi[%d]\n", rssi);
 					}
@@ -482,7 +481,7 @@ lte_dial_enter:
 				memset(at_rcv, 0, sizeof(at_rcv));
 				if (fibocom_module_type == 0) {
 					ret = uart_send_cmd(fd, "AT$QCRMCALL?\r\n", at_rcv, sizeof(at_rcv), 1000 * 3);
-					if (strstr(at_rcv, "$QCRMCALL: 1, V4") == NULL) {
+					if (strstr(at_rcv, "$QCRMCALL: 1,V4") == NULL) {
 						break;
 					}
 				} else {
