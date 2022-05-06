@@ -171,7 +171,7 @@ int lte_net_dial_init(void)
 				memset(at_cmd_temp, 0, sizeof(at_cmd_temp));
 				memset(mgauth_cmd_temp, 0, sizeof(mgauth_cmd_temp));
 
-				if ((f_profile_5g.enable_5g == 1) && (f_profile_5g.apn != NULL)) {
+				if ((f_profile_5g.enable_5g[0] == 1) && (f_profile_5g.apn != NULL)) {
 					if ((f_profile_5g.user != NULL) && (f_profile_5g.pwd != NULL)) {
 						sprintf(mgauth_cmd_temp, "AT+MGAUTH=1, 0, \"%s\", \"%s\"\r\n",
 							f_profile_5g.user, f_profile_5g.pwd);
@@ -226,12 +226,12 @@ int lte_net_dial_init(void)
 				ret = uart_send_cmd(fd, "AT+C5GREG?\r\n", rcv_buf, sizeof(rcv_buf), 1000 * 2);
 				sscanf(rcv_buf, "\n+C5GREG: %d, %d", &n_5g, &state_5g);
 				if ((state_5g == 1) || (state_5g == 5)) {
-					f_profile_5g.enable_5g = 1;
+					f_profile_5g.enable_5g[0] = 1;
 					strcpy(nettype_msg, "5G");
 					set_dial_sta(LTE_CHECK_DIAL);
 					break;
 				} else {
-					f_profile_5g.enable_5g = 0;
+					f_profile_5g.enable_5g[0] = 0;
 					if (search_cnt > NET_SEARCH_CNT) {
 						return NET_NO_REGISTER;
 					}
@@ -320,7 +320,10 @@ int main(int argc, char **argv)
 lte_dial_enter:
 	memset(imei_msg, 0, sizeof(imei_msg));
 	strcpy(imei_msg, "UNKNOWN");
-	strcpy(f_profile_5g.apn, "hasmxkxhg201s.5gha.njiot");
+	if (argv[1] == NULL)
+		strcpy(f_profile_5g.apn, "hasmxkxhg201s.5gha.njiot");
+	else
+		strcpy(f_profile_5g.apn, argv[1]);
 
 	/* 打开串口，返回文件描述符 */
 	if (fibocom_module_type == 0) {
@@ -438,7 +441,7 @@ lte_dial_enter:
 					int ss_rsrq = 0;
 					char str_ss_rsrp[10];
 
-					f_profile_5g.enable_5g = 1;
+					f_profile_5g.enable_5g[0] = 1;
 
 					// ss_rsrp   //AT+CESQ// +CESQ: 99, 99, 255, 255, 26, 64, 255, 255, 255
 					memset(at_rcv, 0, sizeof(at_rcv));
@@ -456,7 +459,7 @@ lte_dial_enter:
 					int rssi = 0;
 					int ber = 0;
 					char str_rssi[10];
-					f_profile_5g.enable_5g = 0;
+					f_profile_5g.enable_5g[0] = 0;
 					//RSSI
 					memset(at_rcv, 0, sizeof(at_rcv));
 					ret = uart_send_cmd(fd, "AT+CSQ?\r\n", at_rcv, sizeof(at_rcv), 1000 * 2);
@@ -470,7 +473,7 @@ lte_dial_enter:
 					sprintf(str_rssi, "%d", rssi);
 					strcpy(rssi_msg, str_rssi);
 				} else {
-					f_profile_5g.enable_5g = 0;
+					f_profile_5g.enable_5g[0] = 0;
 					strcpy(rssi_msg, "UNKNOWN");
 				}
 				sleep(5);
